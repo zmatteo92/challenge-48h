@@ -5,6 +5,7 @@ import { getAllEvents, getEventParticipantsByUser, addEventParticipant } from '.
 function Events({ currentUser }) {
     const [events, setEvents] = useState([]);
     const [userParticipations, setUserParticipations] = useState([]);
+    const [filter, setFilter] = useState('All');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -29,17 +30,29 @@ function Events({ currentUser }) {
         });
     };
 
+    const filteredEvents = filter === 'All' ? events : events.filter(event => event.category === filter);
+
     return (
         <div>
             <h1>Événements</h1>
+            <div className="filter">
+                <label>Filtrer par catégorie : </label>
+                <select onChange={(e) => setFilter(e.target.value)} value={filter}>
+                    <option value="All">Tous</option>
+                    <option value="Sport">Sport</option>
+                    <option value="E-Sport">E-Sport</option>
+                    <option value="Event">Événement</option>
+                </select>
+            </div>
             <div className="events">
-                {events.length > 0 ? (
-                    events.map(event => (
+                {filteredEvents.length > 0 ? (
+                    filteredEvents.map(event => (
                         <div className="event" key={event.id}>
                             <h3>{event.title}</h3>
                             <p>{event.description}</p>
                             <p><strong>Date :</strong> {event.date} à {event.time}</p>
                             <p><strong>Lieu :</strong> {event.location}</p>
+                            <p><strong>Catégorie :</strong> {event.category}</p>
                             {userParticipations.includes(event.id) ? (
                                 <p>Vous êtes déjà inscrit à cet événement.</p>
                             ) : (

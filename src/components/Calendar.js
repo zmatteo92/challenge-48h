@@ -20,14 +20,15 @@ function Calendar({ currentUser }) {
                 start: `${event.date}T${event.time}`,
                 end: `${event.date}T${event.time}`,
                 description: event.description,
-                location: event.location
+                location: event.location,
+                category: event.category
             }));
             setEvents(calendarEvents);
         });
     }, [currentUser, navigate]);
 
     const handleEventClick = (info) => {
-        alert(`Événement : ${info.event.title}\nDescription : ${info.event.extendedProps.description}\nLieu : ${info.event.extendedProps.location}`);
+        alert(`Événement : ${info.event.title}\nDescription : ${info.event.extendedProps.description}\nLieu : ${info.event.extendedProps.location}\nCatégorie : ${info.event.extendedProps.category}`);
     };
 
     return (

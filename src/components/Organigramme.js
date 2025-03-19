@@ -10,22 +10,27 @@ function Organigramme() {
         });
     }, []);
 
+    const poles = [...new Set(teamMembers.map(member => member.pole))];
+
     return (
         <div>
-            <h1>Organigramme</h1>
-            <div className="team-members">
-                {teamMembers.length > 0 ? (
-                    teamMembers.map(member => (
-                        <div className="member" key={member.id}>
-                            <h3>{member.name}</h3>
-                            <p><strong>Rôle :</strong> {member.role}</p>
-                            <p>{member.description}</p>
-                        </div>
-                    ))
-                ) : (
-                    <p>Aucun membre pour le moment.</p>
-                )}
-            </div>
+            <h1>Organigramme 2025</h1>
+            {poles.map(pole => (
+                <div key={pole}>
+                    <h2>{pole}</h2>
+                    <div className="team-members">
+                        {teamMembers
+                            .filter(member => member.pole === pole)
+                            .map(member => (
+                                <div className="member" key={member.id}>
+                                    <h3>{member.name}</h3>
+                                    <p><strong>Rôle :</strong> {member.role}</p>
+                                    <p>{member.description}</p>
+                                </div>
+                            ))}
+                    </div>
+                </div>
+            ))}
         </div>
     );
 }
