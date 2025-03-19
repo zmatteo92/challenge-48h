@@ -1,55 +1,43 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { getUserByUsername, getUserByEmail, addUser } from '../db/indexedDB';
 
-function Signup({ onLogin }) {
-    const [formData, setFormData] = useState({ username: '', email: '', password: '' });
-    const [error, setError] = useState('');
+function Signup() {
+  const [form, setForm] = useState({ username: '', email: '', password: '' });
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        Promise.all([getUserByUsername(formData.username), getUserByEmail(formData.email)]).then(([userByUsername, userByEmail]) => {
-            if (userByUsername) {
-                setError('Nom d’utilisateur déjà utilisé.');
-                return;
-            }
-            if (userByEmail) {
-                setError('Email déjà utilisé.');
-                return;
-            }
-            if (!/\S+@\S+\.\S+/.test(formData.email)) {
-                setError('Veuillez entrer un email valide.');
-                return;
-            }
-            const newUser = { username: formData.username, email: formData.email, password: formData.password, isAdmin: false };
-            addUser(newUser).then(() => {
-                getUserByUsername(formData.username).then(user => {
-                    onLogin(user);
-                });
-            });
-        });
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    return (
-        <div>
-            <h1>Inscription</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Nom d’utilisateur :</label>
-                <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} required />
-                <label htmlFor="email">Email :</label>
-                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
-                <label htmlFor="password">Mot de passe :</label>
-                <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
-                <button type="submit">S’inscrire</button>
-            </form>
-            {error && <p className="error">{error}</p>}
-            <p>Déjà un compte ? <Link to="/login">Connectez-vous ici</Link>.</p>
-        </div>
-    );
+    try {
+      const response = await fetch('http://localhost:5001/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Inscription réussie ! 🎉');
+      } else {
+        alert('Erreur : ' + data.error);
+      }
+    } catch (error) {
+      console.error('Erreur de connexion au serveur:', error);
+      alert('Erreur de connexion au serveur');
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input name="username" placeholder="Nom d'utilisateur" onChange={handleChange} required />
+      <input name="email" placeholder="Email" type="email" onChange={handleChange} required />
+      <input name="password" placeholder="Mot de passe" type="password" onChange={handleChange} required />
+      <button type="submit">S'inscrire</button>
+    </form>
+  );
 }
 
 export default Signup;
