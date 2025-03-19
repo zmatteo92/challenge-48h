@@ -40,6 +40,25 @@ app.post('/api/signup', (req, res) => {
   }
 });
 
+// Route pour connexion des utilisateurs
+app.post('/api/login', (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const stmt = db.prepare('SELECT * FROM users WHERE email = ? AND password = ?');
+    const user = stmt.get(email, password);
+
+    if (user) {
+      res.status(200).json({ username: user.username, email: user.email });
+    } else {
+      res.status(401).json({ error: 'Email ou mot de passe incorrect' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Erreur interne du serveur' });
+  }
+});
+
 // Lancement du serveur
 app.listen(PORT, () => {
   console.log(`Serveur backend lancé sur http://localhost:${PORT}`);
