@@ -1,52 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
+import React, { useState, useEffect } from 'react';
 import { getAllEvents } from '../db/indexedDB';
 
 function Calendar({ currentUser }) {
-    const [events, setEvents] = useState([]);
-    const navigate = useNavigate();
+	const [events, setEvents] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState(null);
 
-    useEffect(() => {
-        if (!currentUser) {
-            navigate('/login');
-            return;
-        }
-        getAllEvents().then(events => {
-            const calendarEvents = events.map(event => ({
-                title: event.title,
-                start: `${event.date}T${event.time}`,
-                end: `${event.date}T${event.time}`,
-                description: event.description,
-                location: event.location,
-                category: event.category
-            }));
-            setEvents(calendarEvents);
-        });
-    }, [currentUser, navigate]);
+	useEffect(() => {
+		setLoading(true);
+		getAllEvents()
+			.then(events => {
+				const sortedEvents = events.sort((a, b) => new Date(a.date) - new Date(b.date));
+				setEvents(sortedEvents);
+				setLoading(false);
+			})
+			.catch(err => {
+				console.error('Erreur lors du chargement des événements:', err);
+				setError('Une erreur est survenue lors du chargement des événements.');
+				setLoading(false);
+			});
+	}, []);
 
-    const handleEventClick = (info) => {
-        alert(`Événement : ${info.event.title}\nDescription : ${info.event.extendedProps.description}\nLieu : ${info.event.extendedProps.location}\nCatégorie : ${info.event.extendedProps.category}`);
-    };
-
-    return (
-        <div>
-            <h1>Calendrier des Événements</h1>
-            <FullCalendar
-                plugins={[dayGridPlugin, timeGridPlugin]}
-                initialView="dayGridMonth"
-                events={events}
-                eventClick={handleEventClick}
-                headerToolbar={{
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                }}
-            />
-        </div>
-    );
+	return (
+		<div>
+			<h1>Calendrier des Événements</h1>
+			{loading ? (
+				<p>Chargement des événements...</p>
+			) : error ? (
+				<p className="error">{error}</p>
+			) : (
+				<div className="events">
+					{events.length > 0 ? (
+						events.map(event => (
+							<div className="event" key={event.id}>
+								<h3>{event.title}</h3>
+								<p>{event.description}</p>
+								<p><strong>Date :</strong> {new Date(event.date).toLocaleDateString('fr-FR')} à {event.time}</p>
+								<p><strong>Lieu :</strong> {event.location}</p>
+								<p><strong>Catégorie :</strong> {event.category}</p>
+							</div>
+						))
+					) : (
+						<p>Aucun événement pour le moment.</p>
+					)}
+				</div>
+			)}
+		</div>
+	);
 }
 
 export default Calendar;

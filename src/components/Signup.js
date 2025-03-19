@@ -1,55 +1,80 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { getUserByUsername, getUserByEmail, addUser } from '../db/indexedDB';
+import { useNavigate } from 'react-router-dom';
+import { addUser, getUserByUsername, getUserByEmail } from '../db/indexedDB';
 
-function Signup({ onLogin }) {
-    const [formData, setFormData] = useState({ username: '', email: '', password: '' });
-    const [error, setError] = useState('');
+function Signup() {
+	const [username, setUsername] = useState('');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [error, setError] = useState('');
+	const [success, setSuccess] = useState('');
+	const navigate = useNavigate();
 
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (!username || !email || !password) {
+			setError('Veuillez remplir tous les champs.');
+			return;
+		}
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        Promise.all([getUserByUsername(formData.username), getUserByEmail(formData.email)]).then(([userByUsername, userByEmail]) => {
-            if (userByUsername) {
-                setError('Nom d’utilisateur déjà utilisé.');
-                return;
-            }
-            if (userByEmail) {
-                setError('Email déjà utilisé.');
-                return;
-            }
-            if (!/\S+@\S+\.\S+/.test(formData.email)) {
-                setError('Veuillez entrer un email valide.');
-                return;
-            }
-            const newUser = { username: formData.username, email: formData.email, password: formData.password, isAdmin: false };
-            addUser(newUser).then(() => {
-                getUserByUsername(formData.username).then(user => {
-                    onLogin(user);
-                });
-            });
-        });
-    };
+		Promise.all([getUserByUsername(username), getUserByEmail(email)])
+			.then(([userByUsername, userByEmail]) => {
+				if (userByUsername) {
+					setError('Ce nom d\'utilisateur est déjà pris.');
+					return;
+				}
+				if (userByEmail) {
+					setError('Cet email est déjà utilisé.');
+					return;
+				}
+				addUser({ username, email, password, isAdmin: false })
+					.then(() => {
+						setSuccess('Inscription réussie ! Vous pouvez maintenant vous connecter.');
+						setError('');
+						setTimeout(() => navigate('/login'), 2000);
+					})
+					.catch(err => {
+						console.error('Erreur lors de l\'inscription:', err);
+						setError('Une erreur est survenue lors de l\'inscription.');
+					});
+			})
+			.catch(err => {
+				console.error('Erreur lors de la vérification des données:', err);
+				setError('Une erreur est survenue lors de la vérification des données.');
+			});
+	};
 
-    return (
-        <div>
-            <h1>Inscription</h1>
-            <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Nom d’utilisateur :</label>
-                <input type="text" id="username" name="username" value={formData.username} onChange={handleChange} required />
-                <label htmlFor="email">Email :</label>
-                <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
-                <label htmlFor="password">Mot de passe :</label>
-                <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
-                <button type="submit">S’inscrire</button>
-            </form>
-            {error && <p className="error">{error}</p>}
-            <p>Déjà un compte ? <Link to="/login">Connectez-vous ici</Link>.</p>
-        </div>
-    );
+	return (
+		<div>
+			<h1>Inscription</h1>
+			<form onSubmit={handleSubmit}>
+				<label htmlFor="username">Nom d'utilisateur :</label>
+				<input
+					type="text"
+					id="username"
+					value={username}
+					onChange={(e) => setUsername(e.target.value)}
+				/>
+				<label htmlFor="email">Email :</label>
+				<input
+					type="email"
+					id="email"
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+				/>
+				<label htmlFor="password">Mot de passe :</label>
+				<input
+					type="password"
+					id="password"
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+				/>
+				<button type="submit">S'inscrire</button>
+			</form>
+			{success && <p className="success">{success}</p>}
+			{error && <p className="error">{error}</p>}
+		</div>
+	);
 }
 
 export default Signup;

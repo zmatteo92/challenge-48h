@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { getAllProducts } from '../db/indexedDB';
 
-function Home() {
+function Products() {
 	const [products, setProducts] = useState([]);
+	const [filter, setFilter] = useState('Sportswear');
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
@@ -23,18 +23,26 @@ function Home() {
 			});
 	}, []);
 
+	const filteredProducts = filter === 'All' ? products : products.filter(product => product.category === filter);
+
 	return (
-		<section className="hero">
-			<h1>Bienvenue au BDS Ynov Paris</h1>
-			<p>Boostez vos performances avec notre collection exclusive de sportswear !</p>
+		<div>
+			<h1>Nos Produits</h1>
+			<div className="filter">
+				<label>Filtrer par catégorie :</label>
+				<select onChange={(e) => setFilter(e.target.value)} value={filter}>
+					<option value="All">Tous</option>
+					<option value="Sportswear">Sportswear</option>
+				</select>
+			</div>
 			{loading ? (
 				<p>Chargement des produits...</p>
 			) : error ? (
 				<p className="error">{error}</p>
 			) : (
 				<div className="products">
-					{products.length > 0 ? (
-						products.map(product => (
+					{filteredProducts.length > 0 ? (
+						filteredProducts.map(product => (
 							<div className="product" key={product.id}>
 								<img src={product.image} alt={product.name} width="200" onError={(e) => e.target.src = '/images/placeholder.png'} />
 								<h3>{product.name}</h3>
@@ -53,13 +61,8 @@ function Home() {
 					)}
 				</div>
 			)}
-			<div className="about">
-				<h2>Le BDS Change d’Identité</h2>
-				<p>Nous sommes fiers de dévoiler notre nouveau logo et nos nouvelles couleurs : bleu et noir. Rejoignez-nous pour découvrir nos activités et événements !</p>
-				<Link to="/events" className="btn">Suivez nos activités</Link>
-			</div>
-		</section>
+		</div>
 	);
 }
 
-export default Home;
+export default Products;
