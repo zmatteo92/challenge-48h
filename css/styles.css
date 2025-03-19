@@ -1,0 +1,126 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #fff;
+}
+
+header {
+    background-color: #1a2a6c;
+    padding: 10px 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    color: #b3c7ff;
+}
+
+main {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+.hero {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.hero h1 {
+    font-size: 2.5em;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1a2a6c;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #b3c7ff;
+    color: #000;
+}
+
+.team-members, .events {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.member, .event {
+    background-color: #1a2a6c;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+form {
+    max-width: 500px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input, form textarea {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+}
+
+form button {
+    padding: 10px;
+    background-color: #1a2a6c;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #b3c7ff;
+    color: #000;
+}
+
+.success {
+    color: #b3c7ff;
+    text-align: center;
+}
+
+.error {
+    color: #ff4d4d;
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1a2a6c;
+}

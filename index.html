@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BDS - Bureau des Sports</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" />
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <script src="js/scripts.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo BDS" width="50">
+            </div>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="organigramme.html">Organigramme</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="calendar.html">Calendrier</a></li>
+                <li><a href="events.html">Événements</a></li>
+                <li id="admin-link" style="display: none;"><a href="admin.html">Admin</a></li>
+                <li id="login-link"><a href="login.html">Connexion</a></li>
+                <li id="signup-link"><a href="signup.html">Inscription</a></li>
+                <li id="logout-link" style="display: none;"><a href="#" onclick="logout()">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section class="hero">
+            <h1>Bienvenue au Bureau des Sports (BDS)</h1>
+            <p>Le BDS organise des activités sportives pour les étudiants, comme des séances de gym, des soirées laser game, les Olympiades du campus de Paris et la coupe LoL Ynov.</p>
+            <a href="events.html" class="btn">Voir les événements</a>
+        </section>
+    </main>
+    <footer>
+        <p>© 2025 Bureau des Sports. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>

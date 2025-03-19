@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - BDS</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/scripts.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="images/logo.png" alt="Logo BDS" width="50">
+            </div>
+            <ul>
+                <li><a href="index.html">Accueil</a></li>
+                <li><a href="organigramme.html">Organigramme</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="calendar.html">Calendrier</a></li>
+                <li><a href="events.html">Événements</a></li>
+                <li id="admin-link" style="display: none;"><a href="admin.html">Admin</a></li>
+                <li id="login-link"><a href="login.html">Connexion</a></li>
+                <li id="signup-link"><a href="signup.html">Inscription</a></li>
+                <li id="logout-link" style="display: none;"><a href="#" onclick="logout()">Déconnexion</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Contactez-nous</h1>
+        <form id="contact-form">
+            <label for="name">Nom :</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email :</label>
+            <input type="email" id="email" name="email" required>
+            <label for="message">Message :</label>
+            <textarea id="message" name="message" required></textarea>
+            <button type="submit">Envoyer</button>
+        </form>
+    </main>
+    <footer>
+        <p>© 2025 Bureau des Sports. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>
