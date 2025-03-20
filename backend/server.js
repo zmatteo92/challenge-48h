@@ -63,6 +63,10 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 // (serveur)
 app.listen(PORT, () => {
   console.log(`Serveur backend lancé sur http://localhost:${PORT}`);
