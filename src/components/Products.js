@@ -49,7 +49,7 @@ function Products() {
 								<p>{product.description}</p>
 								<p><strong>Prix :</strong> {product.price > 0 ? `${product.price}€` : 'Prix non disponible'}</p>
 								{product.priceESN > 0 && (
-									<p><strong>Prix ESN :</strong> {product.priceESN}€ 💚</p>
+									<p><strong>Prix ESN :</strong> {product.priceESN}€</p>
 								)}
 								<a href="https://www.epopey.com" target="_blank" rel="noopener noreferrer" className="btn">
 									Acheter sur Epopey
