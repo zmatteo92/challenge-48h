@@ -18,4 +18,4 @@ installation
 3. SQLite viewer installation en extensions
 
 Lancer l'application : 
-3.	npm start
+4.	npm start
