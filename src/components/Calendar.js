@@ -23,7 +23,6 @@ function Calendar({ currentUser }) {
             });
     }, []);
 
-    // Fonction pour générer les jours du mois
     const getDaysInMonth = (year, month) => {
         const date = new Date(year, month, 1);
         const days = [];
@@ -34,12 +33,10 @@ function Calendar({ currentUser }) {
         return days;
     };
 
-    // Fonction pour obtenir le premier jour du mois (pour l'alignement)
     const getFirstDayOfMonth = (year, month) => {
         return new Date(year, month, 1).getDay();
     };
 
-    // Fonction pour naviguer entre les mois
     const prevMonth = () => {
         setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1));
         setSelectedDate(null);
@@ -52,11 +49,9 @@ function Calendar({ currentUser }) {
         setSelectedEvents([]);
     };
 
-    // Générer les jours du mois actuel
     const daysInMonth = getDaysInMonth(currentMonth.getFullYear(), currentMonth.getMonth());
     const firstDay = getFirstDayOfMonth(currentMonth.getFullYear(), currentMonth.getMonth());
 
-    // Fonction pour vérifier si un jour a des événements
     const hasEvents = (date) => {
         return events.some(event => {
             const eventDate = new Date(event.date);
@@ -68,7 +63,6 @@ function Calendar({ currentUser }) {
         });
     };
 
-    // Fonction pour gérer le clic sur un jour
     const handleDayClick = (date) => {
         setSelectedDate(date);
         const dayEvents = events.filter(event => {
