@@ -1,18 +1,23 @@
 const express = require('express');
 const cors = require('cors');
 const Database = require('better-sqlite3');
-const bcrypt = require('bcrypt'); 
+const bcrypt = require('bcrypt');
 
 const app = express();
-const PORT = 3000;
+// Choisis un port distinct de celui de React (3000 par défaut)
+// Ex. 5001 pour éviter les conflits.
+const PORT = 5001;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connexion à SQLite 
-const db = new Database('/mnt/data/database.sqlite', { verbose: console.log });
+// Connexion à la base SQLite
+// Assure-toi que ./database.sqlite existe OU sera créé dans backend/
+const db = new Database('./database.sqlite');
 
-// Création de la table 
+// Création de la table users si elle n'existe pas
+// (username et email en UNIQUE, password haché dans la colonne password)
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,39 +27,43 @@ db.exec(`
   )
 `);
 
-// Test du backend
+// Route de test
 app.get('/', (req, res) => {
   res.send('Backend fonctionne parfaitement 🎉');
 });
 
-// Route pour l'inscription 
+// Route d'inscription
 app.post('/api/signup', async (req, res) => {
   const { username, email, password } = req.body;
 
   try {
-    // mot de passe
+    // On hache le mot de passe avant de stocker
     const hashedPassword = await bcrypt.hash(password, 10);
     const stmt = db.prepare('INSERT INTO users (username, email, password) VALUES (?, ?, ?)');
     stmt.run(username, email, hashedPassword);
 
     res.status(201).json({ message: 'Utilisateur créé avec succès !' });
   } catch (err) {
-    console.error('Erreur d\'inscription:', err);
+    console.error("Erreur d'inscription:", err);
     res.status(400).json({ error: err.message });
   }
 });
 
-// Route pour la connexion 
+// Route de connexion
 app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // On récupère l'utilisateur depuis la DB par email
     const stmt = db.prepare('SELECT * FROM users WHERE email = ?');
     const user = stmt.get(email);
 
+    // compare le password haché
     if (user && await bcrypt.compare(password, user.password)) {
+      // Succès : renvoie user info (sans password)
       res.status(200).json({ username: user.username, email: user.email });
     } else {
+      // Erreur authentification
       res.status(401).json({ error: 'Email ou mot de passe incorrect' });
     }
   } catch (err) {
@@ -63,11 +72,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-const bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// (serveur)
+// Lancement du serveur
 app.listen(PORT, () => {
   console.log(`Serveur backend lancé sur http://localhost:${PORT}`);
 });
